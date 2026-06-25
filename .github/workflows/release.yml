@@ -55,14 +55,14 @@ jobs:
     - name: Accept WiX EULA
       shell: pwsh
       run: |
-        wix eula accept
+        wix eula accept wix7
 
     # 5. Build the MSI Installer Package
     - name: Build MSI Package
       shell: pwsh
       run: |
         # This compiles the Package.wxs blueprint using the wix cli
-        wix build -o SnapAtom.msi -d PublishDir=publish_output Package.wxs
+        wix build -acceptEula wix7 -o SnapAtom.msi -d PublishDir=publish_output Package.wxs
 
     # 6. Sign the MSI Package
     - name: Sign MSI Package
