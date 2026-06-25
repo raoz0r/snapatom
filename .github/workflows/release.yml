@@ -53,7 +53,7 @@ jobs:
 
     # 5. Create GitHub Release & Upload Installer
     - name: Create Release
-      uses: softprops/action-gh-release@v2.2.0
+      uses: softprops/action-gh-release@v2
       with:
         tag_name: v1.0.${{ github.run_number }}
         name: Release v1.0.${{ github.run_number }}
