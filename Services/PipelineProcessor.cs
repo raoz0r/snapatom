@@ -277,11 +277,25 @@ Text:
                 }
                 string externalLinksStr = externalLinksList.ToString().TrimEnd();
 
+                // Construct custom metadata lines
+                var customMetaStr = new StringBuilder();
+                if (settings.CustomMetadata != null)
+                {
+                    foreach (var meta in settings.CustomMetadata)
+                    {
+                        if (!string.IsNullOrWhiteSpace(meta.Key))
+                        {
+                            customMetaStr.AppendLine($"{CleanMetadataValue(meta.Key)}: {CleanMetadataValue(meta.Value)}");
+                        }
+                    }
+                }
+
                 // Construct markdown file output
                 string mdContent = $@"---
 categories: Clippings
 type: {typeClean}
 description: {descriptionClean}
+{customMetaStr.ToString().TrimEnd()}
 ---
 
 ## Concept
@@ -305,7 +319,7 @@ description: {descriptionClean}
                     PipelineLogger.LogInfo($"  -> Saved note: {noteFilename}");
 
                     // Update running index
-                    await File.AppendAllTextAsync(indexPath, $"- {title} - {descriptionClean}\n", Encoding.UTF8);
+                    await File.AppendAllTextAsync(indexPath, $"- [[{title}]] - {descriptionClean}\n", Encoding.UTF8);
 
                     successCount++;
                 }
@@ -318,6 +332,41 @@ description: {descriptionClean}
                 if (i < totalEntries - 1)
                 {
                     await Task.Delay(10000);
+                }
+            }
+
+            // Save permanent index file to clippings folder before deleting temporary index.md
+            if (File.Exists(indexPath))
+            {
+                try
+                {
+                    string safeType = string.IsNullOrWhiteSpace(typeArg) ? "General" : typeArg;
+                    string indexFilename = $"_index_{SanitizeFilename(safeType)}.md";
+                    string permanentIndexPath = Path.Combine(settings.ClippingsSavePath, indexFilename);
+                    
+                    string runningIndexContent = await File.ReadAllTextAsync(indexPath, Encoding.UTF8);
+                    if (!string.IsNullOrWhiteSpace(runningIndexContent))
+                    {
+                        if (File.Exists(permanentIndexPath))
+                        {
+                            string existing = await File.ReadAllTextAsync(permanentIndexPath, Encoding.UTF8);
+                            if (!existing.EndsWith("\n") && !existing.EndsWith("\r"))
+                            {
+                                existing += "\n";
+                            }
+                            await File.WriteAllTextAsync(permanentIndexPath, existing + runningIndexContent, Encoding.UTF8);
+                        }
+                        else
+                        {
+                            string header = $"# {safeType} Index\n\n";
+                            await File.WriteAllTextAsync(permanentIndexPath, header + runningIndexContent, Encoding.UTF8);
+                        }
+                        PipelineLogger.LogInfo($"Saved permanent index to: {permanentIndexPath}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    PipelineLogger.LogError($"Failed to save permanent index file: {ex.Message}");
                 }
             }
 

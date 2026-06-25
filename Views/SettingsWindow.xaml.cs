@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace Text_Grab
     public partial class SettingsWindow : Window
     {
         private AppSettings settings;
+        private ObservableCollection<MetadataItem> customMetadataItems = null!;
         public event Action<AppSettings>? OnSettingsSaved;
 
         // Modifiers flags
@@ -68,6 +70,17 @@ namespace Text_Grab
         private void LoadSettingsIntoUi()
         {
             SavePathTextBox.Text = settings.ClippingsSavePath;
+
+            // Load custom metadata items
+            customMetadataItems = new ObservableCollection<MetadataItem>();
+            if (settings.CustomMetadata != null)
+            {
+                foreach (var item in settings.CustomMetadata)
+                {
+                    customMetadataItems.Add(new MetadataItem { Key = item.Key, Value = item.Value });
+                }
+            }
+            MetadataItemsControl.ItemsSource = customMetadataItems;
 
             // Load AI configuration
             ProviderCombo.SelectedItem = settings.AiProvider;
@@ -172,6 +185,19 @@ namespace Text_Grab
                 {
                     SavePathTextBox.Text = dialog.SelectedPath;
                 }
+            }
+        }
+
+        private void AddMetadataButton_Click(object sender, RoutedEventArgs e)
+        {
+            customMetadataItems.Add(new MetadataItem { Key = "", Value = "" });
+        }
+
+        private void DeleteMetadataButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is MetadataItem item)
+            {
+                customMetadataItems.Remove(item);
             }
         }
 
@@ -336,6 +362,11 @@ namespace Text_Grab
             settings.AiApiKey = ApiKeyTextBox.Text.Trim();
             settings.AiModelName = ModelTextBox.Text.Trim();
             settings.CustomEndpoint = CustomEndpointTextBox.Text.Trim();
+
+            // Save custom metadata
+            settings.CustomMetadata = customMetadataItems
+                .Where(item => !string.IsNullOrWhiteSpace(item.Key))
+                .ToList();
 
             // Save Start Grab hotkey
             settings.StartGrabModifiers = GetModifierValue(GrabWinCb, GrabCtrlCb, GrabShiftCb, GrabAltCb);

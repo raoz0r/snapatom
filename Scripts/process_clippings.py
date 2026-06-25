@@ -148,6 +148,17 @@ def main():
         sys.exit(1)
 
     clippings_dir = r"E:\ghost\documents\argus\04-raw\clippings"
+    custom_metadata = []
+    settings_path = os.path.join(script_dir, "settings.json")
+    if os.path.exists(settings_path):
+        try:
+            with open(settings_path, 'r', encoding='utf-8') as sf:
+                settings_data = json.load(sf)
+                clippings_dir = settings_data.get("ClippingsSavePath", clippings_dir)
+                custom_metadata = settings_data.get("CustomMetadata", [])
+        except Exception as e:
+            logger.error(f"Failed to load settings.json: {e}")
+
     os.makedirs(clippings_dir, exist_ok=True)
 
     success_count = 0
@@ -214,6 +225,14 @@ Text:
         type_clean = clean_metadata_value(cli_type)
         description_clean = clean_metadata_value(description)
 
+        # Construct custom metadata lines
+        custom_meta_str = ""
+        for meta in custom_metadata:
+            meta_key = meta.get("Key", "")
+            meta_val = meta.get("Value", "")
+            if meta_key:
+                custom_meta_str += f"{clean_metadata_value(meta_key)}: {clean_metadata_value(meta_val)}\n"
+
         # Format links lists
         cleaned_internal_links = [link.replace(':', '') for link in internal_links] if internal_links else []
         internal_links_str = "\n".join(f"- {link}" for link in cleaned_internal_links) if cleaned_internal_links else ""
@@ -224,6 +243,7 @@ Text:
 categories: Clippings
 type: {type_clean}
 description: {description_clean}
+{custom_meta_str.strip()}
 ---
 
 ## Concept
@@ -248,7 +268,7 @@ description: {description_clean}
             
             # Update running index
             with open(index_path, 'a', encoding='utf-8') as f:
-                f.write(f"- {title} - {description_clean}\n")
+                f.write(f"- [[{title}]] - {description_clean}\n")
             
             success_count += 1
         except Exception as e:
@@ -257,6 +277,32 @@ description: {description_clean}
         # Sleep briefly between calls to be a good API citizen
         if idx < total_entries:
             time.sleep(10)
+
+    # Save permanent index file to clippings folder before deleting temporary index.md
+    if os.path.exists(index_path):
+        try:
+            safe_type = cli_type if cli_type else "General"
+            index_filename = f"_index_{sanitize_filename(safe_type)}.md"
+            permanent_index_path = os.path.join(clippings_dir, index_filename)
+            
+            with open(index_path, 'r', encoding='utf-8') as f:
+                running_index_content = f.read()
+                
+            if running_index_content.strip():
+                if os.path.exists(permanent_index_path):
+                    with open(permanent_index_path, 'r', encoding='utf-8') as f:
+                        existing = f.read()
+                    if not (existing.endswith('\n') or existing.endswith('\r')):
+                        existing += '\n'
+                    with open(permanent_index_path, 'w', encoding='utf-8') as f:
+                        f.write(existing + running_index_content)
+                else:
+                    header = f"# {safe_type} Index\n\n"
+                    with open(permanent_index_path, 'w', encoding='utf-8') as f:
+                        f.write(header + running_index_content)
+                logger.info(f"Saved permanent index to: {permanent_index_path}")
+        except Exception as e:
+            logger.error(f"Failed to save permanent index file: {e}")
 
     # Cleanup temporary index.md
     if os.path.exists(index_path):

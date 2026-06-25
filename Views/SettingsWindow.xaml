@@ -5,7 +5,8 @@
         WindowStartupLocation="CenterScreen"
         Background="#18181B" Foreground="#F4F4F5"
         WindowStyle="None" ResizeMode="NoResize"
-        AllowsTransparency="True" BorderThickness="1" BorderBrush="#27272A">
+        AllowsTransparency="True" BorderThickness="1" BorderBrush="#27272A"
+        Icon="pack://siteoforigin:,,,/app_icon.png">
     
     <Window.Resources>
         <Style TargetType="TextBox">
@@ -159,59 +160,6 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
-        <Style x:Key="PrimaryButton" TargetType="Button">
-            <Setter Property="Background" Value="#A855F7"/>
-            <Setter Property="Foreground" Value="#FFFFFF"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="16,0"/>
-            <Setter Property="Height" Value="32"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" CornerRadius="6" Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Background" Value="#C084FC"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="true">
-                                <Setter Property="Background" Value="#9333EA"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="SecondaryButton" TargetType="Button">
-            <Setter Property="Background" Value="#27272A"/>
-            <Setter Property="Foreground" Value="#E4E4E7"/>
-            <Setter Property="BorderBrush" Value="#3F3F46"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="16,0"/>
-            <Setter Property="Height" Value="32"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" CornerRadius="6" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Background" Value="#3F3F46"/>
-                                <Setter Property="BorderBrush" Value="#52525B"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="true">
-                                <Setter Property="Background" Value="#18181B"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <!-- Premium TabControl styling -->
         <Style TargetType="TabControl">
             <Setter Property="Background" Value="Transparent"/>
@@ -339,9 +287,12 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0">
-                    <TextBlock Text="SnapAtom Settings" FontSize="20" FontWeight="Bold" Foreground="#FAF5FF"/>
-                    <TextBlock Text="Configure providers, paths, shortcuts, and AI features" FontSize="12" Foreground="#A1A1AA" Margin="0,2,0,0"/>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Image Source="pack://siteoforigin:,,,/app_icon.png" Width="36" Height="36" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="SnapAtom Settings" FontSize="20" FontWeight="Bold" Foreground="#FAF5FF"/>
+                        <TextBlock Text="Configure providers, paths, shortcuts, and AI features" FontSize="12" Foreground="#A1A1AA" Margin="0,2,0,0"/>
+                    </StackPanel>
                 </StackPanel>
                 <Button Grid.Column="1" Content="✕" Width="30" Height="30" Background="Transparent" Foreground="#A1A1AA" BorderThickness="0" FontSize="16" Click="CancelButton_Click" Cursor="Hand" VerticalAlignment="Center">
                     <Button.Style>
@@ -381,6 +332,45 @@
                         <TextBox Grid.Column="0" x:Name="SavePathTextBox" Margin="0,0,8,0"/>
                         <Button Grid.Column="1" Content="Browse..." Width="80" Style="{StaticResource SecondaryButton}" Click="BrowseButton_Click"/>
                     </Grid>
+
+                    <!-- Section: Custom Metadata -->
+                    <Separator Background="#27272A" Margin="0,10,0,15"/>
+                    
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Custom Metadata (Frontmatter)" FontSize="14" FontWeight="SemiBold" Foreground="#C084FC"/>
+                            <TextBlock Text="Additional key-value pairs added to note frontmatter." FontSize="11" Foreground="#A1A1AA" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <Button Grid.Column="1" Content="+ Add Key" Style="{StaticResource SecondaryButton}" Click="AddMetadataButton_Click" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <ScrollViewer Height="180" VerticalScrollBarVisibility="Auto" BorderBrush="#27272A" BorderThickness="1" Background="#0F0F11" Margin="0,0,0,10">
+                        <ItemsControl x:Name="MetadataItemsControl">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="8,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding Key, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0" ToolTip="Metadata Key (e.g. author)"/>
+                                        <TextBox Grid.Column="1" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0" ToolTip="Metadata Value (e.g. Obsidian)"/>
+                                        <Button Grid.Column="2" Width="32" Height="32" Style="{StaticResource SecondaryButton}" Click="DeleteMetadataButton_Click" Tag="{Binding}" ToolTip="Delete metadata item">
+                                            <Viewbox Width="14" Height="14">
+                                                <Path Data="M 10,11 V 17 M 14,11 V 17 M 19,6 V 20 A 2,2 0 0 1 17,22 H 7 A 2,2 0 0 1 5,20 V 6 M 3,6 H 21 M 8,6 V 4 A 2,2 0 0 1 10,2 H 14 A 2,2 0 0 1 16,4 V 6"
+                                                      Stroke="#EF4444" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"/>
+                                            </Viewbox>
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </StackPanel>
             </TabItem>
 

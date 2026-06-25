@@ -18,6 +18,8 @@ namespace Text_Grab
         public string AiModelName { get; set; } = "gemini-2.5-flash";
         public string CustomEndpoint { get; set; } = "http://localhost:11434/v1/chat/completions";
 
+        public System.Collections.Generic.List<MetadataItem> CustomMetadata { get; set; } = new System.Collections.Generic.List<MetadataItem>();
+
         // Hotkeys configuration (Main Virtual Key code + Modifiers)
         // Modifiers: Alt=1, Control=2, Shift=4, Win=8, NoRepeat=0x4000
         // Virtual Key Codes: S=0x53 (83), D=0x44 (68)
@@ -127,5 +129,11 @@ namespace Text_Grab
                 }
             }
         }
+    }
+
+    public class MetadataItem
+    {
+        public string Key { get; set; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
     }
 }

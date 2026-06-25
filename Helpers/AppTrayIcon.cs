@@ -23,7 +23,7 @@ namespace Text_Grab
         {
             notifyIcon = new NotifyIcon();
 
-            // Try to load tray icon from custom PNG, make black transparent
+            // Try to load tray icon from custom PNG
             try
             {
                 string pngPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "app_icon.png");
@@ -31,8 +31,6 @@ namespace Text_Grab
                 {
                     using (Bitmap bmp = new Bitmap(pngPath))
                     {
-                        // Make black color transparent (the image generated has a solid black background)
-                        bmp.MakeTransparent(Color.Black);
                         hIcon = bmp.GetHicon();
                         notifyIcon.Icon = Icon.FromHandle(hIcon);
                     }

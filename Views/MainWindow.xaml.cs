@@ -169,18 +169,29 @@ namespace Text_Grab
                 return;
             }
 
+            string typeArg = "";
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length > 1)
+            {
+                typeArg = args[1];
+            }
+            else
+            {
+                InputDialog inputDlg = new InputDialog();
+                inputDlg.ShowDialog();
+                if (inputDlg.IsCancelled)
+                {
+                    System.Diagnostics.Debug.WriteLine("Batch sync cancelled by user.");
+                    return;
+                }
+                typeArg = inputDlg.InputText;
+            }
+
             isProcessing = true;
-            trayIcon?.ShowNotification("Processing Started", "Gemini OCR clippings batch processing started in background...", System.Windows.Forms.ToolTipIcon.Info);
+            trayIcon?.ShowNotification("Processing Started", "AI clippings batch processing started in background...", System.Windows.Forms.ToolTipIcon.Info);
 
             try
             {
-                string[] args = Environment.GetCommandLineArgs();
-                string typeArg = "";
-                if (args.Length > 1)
-                {
-                    typeArg = args[1];
-                }
-
                 await System.Threading.Tasks.Task.Run(async () =>
                 {
                     await PipelineProcessor.ProcessBatchAsync(settings, typeArg);
