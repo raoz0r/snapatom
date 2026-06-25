@@ -3,6 +3,7 @@
     <OutputName>SnapAtom</OutputName>
     <OutputType>Package</OutputType>
     <AcceptEula>wix7</AcceptEula>
+    <InstallerPlatform>x64</InstallerPlatform>
     <DefineConstants>PublishDir=$(PublishDir)</DefineConstants>
   </PropertyGroup>
 </Project>
