@@ -1,0 +1,72 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="SnapAtom" 
+           Manufacturer="SnapAtom" 
+           Version="1.0.0" 
+           UpgradeCode="4f3a768d-7c45-0305-ff1f-f0104b7e441f" 
+           Scope="perMachine">
+    
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+
+    <MediaTemplate EmbedCab="yes" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="SnapAtom" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="SnapAtom" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+
+    <!-- Icon configuration for Shortcuts -->
+    <Icon Id="AppIcon" SourceFile="Resources\app_icon.png" />
+
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      
+      <Component Id="SnapAtomExeComponent" Guid="e305ff1f-f010-4b7e-a441-f3a7768d7c45">
+        <File Id="SnapAtomExe" 
+              Source="$(var.PublishDir)\SnapAtom.exe" 
+              KeyPath="yes" />
+        
+        <Shortcut Id="StartMenuShortcut"
+                  Name="SnapAtom"
+                  Description="OCR Sync Clippings Manager"
+                  Directory="ApplicationProgramsFolder"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon"
+                  Advertise="no" />
+
+        <Shortcut Id="DesktopShortcut"
+                  Name="SnapAtom"
+                  Description="OCR Sync Clippings Manager"
+                  Directory="DesktopFolder"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon"
+                  Advertise="no" />
+
+        <RemoveFolder Id="CleanUpStartMenu" Directory="ApplicationProgramsFolder" On="uninstall" />
+      </Component>
+
+      <Component Id="AppIconPngComponent" Guid="5b1a2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d">
+        <File Id="AppIconPng" 
+              Source="$(var.PublishDir)\app_icon.png" />
+      </Component>
+
+      <Component Id="PromptMdComponent" Guid="6c2b3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e">
+        <File Id="PromptMd" 
+              Source="$(var.PublishDir)\prompt.md" />
+      </Component>
+
+      <Component Id="ProcessClippingsPyComponent" Guid="7d3c4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f">
+        <File Id="ProcessClippingsPy" 
+              Source="$(var.PublishDir)\process_clippings.py" />
+      </Component>
+
+    </ComponentGroup>
+
+    <Feature Id="MainProductFeature" Title="SnapAtom App" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+    </Feature>
+  </Package>
+</Wix>
