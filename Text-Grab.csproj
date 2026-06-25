@@ -23,16 +23,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="process_clippings.py">
+    <None Update="Scripts\process_clippings.py">
+      <Link>process_clippings.py</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="prompt.md">
+    <None Update="Scripts\prompt.md">
+      <Link>prompt.md</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update=".env">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="app_icon.png">
+    <None Update="Resources\app_icon.png">
+      <Link>app_icon.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
