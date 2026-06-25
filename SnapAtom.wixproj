@@ -1,0 +1,8 @@
+<Project Sdk="WixToolset.Sdk/7.0.0">
+  <PropertyGroup>
+    <OutputName>SnapAtom</OutputName>
+    <OutputType>Package</OutputType>
+    <AcceptEula>wix7</AcceptEula>
+    <DefineConstants>PublishDir=$(PublishDir)</DefineConstants>
+  </PropertyGroup>
+</Project>

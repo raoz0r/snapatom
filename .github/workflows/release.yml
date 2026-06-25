@@ -61,8 +61,8 @@ jobs:
     - name: Build MSI Package
       shell: pwsh
       run: |
-        # This compiles the Package.wxs blueprint using the wix cli
-        wix build -acceptEula wix7 -o SnapAtom.msi -d PublishDir=publish_output Package.wxs
+        dotnet build SnapAtom.wixproj -c Release -p:PublishDir=publish_output
+        Copy-Item -Path "bin\Release\SnapAtom.msi" -Destination "SnapAtom.msi"
 
     # 6. Sign the MSI Package
     - name: Sign MSI Package

@@ -24,43 +24,54 @@
 
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       
-      <Component Id="SnapAtomExeComponent" Guid="e305ff1f-f010-4b7e-a441-f3a7768d7c45">
+      <Component Id="SnapAtomExeComponent" Guid="e305ff1f-f010-4b7e-a441-f3a7768d7c45" Bitness="always64">
         <File Id="SnapAtomExe" 
               Source="$(var.PublishDir)\SnapAtom.exe" 
               KeyPath="yes" />
-        
+      </Component>
+
+      <!-- Separate component for shortcuts with HKCU registry KeyPath -->
+      <Component Id="ApplicationShortcuts" Guid="f3a7768d-7c45-4305-ff1f-f0104b7e441f" Bitness="always64">
         <Shortcut Id="StartMenuShortcut"
                   Name="SnapAtom"
-                  Description="OCR Sync Clippings Manager"
+                  Target="[INSTALLFOLDER]SnapAtom.exe"
                   Directory="ApplicationProgramsFolder"
                   WorkingDirectory="INSTALLFOLDER"
-                  Icon="AppIcon"
-                  Advertise="no" />
-
+                  Icon="AppIcon" />
+                  
         <Shortcut Id="DesktopShortcut"
                   Name="SnapAtom"
-                  Description="OCR Sync Clippings Manager"
+                  Target="[INSTALLFOLDER]SnapAtom.exe"
                   Directory="DesktopFolder"
                   WorkingDirectory="INSTALLFOLDER"
-                  Icon="AppIcon"
-                  Advertise="no" />
-
+                  Icon="AppIcon" />
+                  
+        <RegistryValue Root="HKCU" 
+                       Key="Software\SnapAtom" 
+                       Name="installed" 
+                       Type="integer" 
+                       Value="1" 
+                       KeyPath="yes" />
+                       
         <RemoveFolder Id="CleanUpStartMenu" Directory="ApplicationProgramsFolder" On="uninstall" />
       </Component>
 
-      <Component Id="AppIconPngComponent" Guid="5b1a2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d">
+      <Component Id="AppIconPngComponent" Guid="5b1a2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d" Bitness="always64">
         <File Id="AppIconPng" 
-              Source="$(var.PublishDir)\app_icon.png" />
+              Source="$(var.PublishDir)\app_icon.png" 
+              KeyPath="yes" />
       </Component>
 
-      <Component Id="PromptMdComponent" Guid="6c2b3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e">
+      <Component Id="PromptMdComponent" Guid="6c2b3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e" Bitness="always64">
         <File Id="PromptMd" 
-              Source="$(var.PublishDir)\prompt.md" />
+              Source="$(var.PublishDir)\prompt.md" 
+              KeyPath="yes" />
       </Component>
 
-      <Component Id="ProcessClippingsPyComponent" Guid="7d3c4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f">
+      <Component Id="ProcessClippingsPyComponent" Guid="7d3c4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f" Bitness="always64">
         <File Id="ProcessClippingsPy" 
-              Source="$(var.PublishDir)\process_clippings.py" />
+              Source="$(var.PublishDir)\process_clippings.py" 
+              KeyPath="yes" />
       </Component>
 
     </ComponentGroup>
