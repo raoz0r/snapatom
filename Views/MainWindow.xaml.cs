@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace Text_Grab
+namespace SnapAtom
 {
     public partial class MainWindow : Window
     {

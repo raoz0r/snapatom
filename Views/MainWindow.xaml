@@ -1,4 +1,4 @@
-<Window x:Class="Text_Grab.MainWindow"
+<Window x:Class="SnapAtom.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="OCR Pipeline Background" Height="0" Width="0" 

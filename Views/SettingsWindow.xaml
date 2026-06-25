@@ -1,4 +1,4 @@
-<Window x:Class="Text_Grab.SettingsWindow"
+<Window x:Class="SnapAtom.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="SnapAtom Settings" Height="700" Width="580"

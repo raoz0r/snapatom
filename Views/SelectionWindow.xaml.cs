@@ -7,7 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Point = System.Windows.Point;
 
-namespace Text_Grab
+namespace SnapAtom
 {
     public partial class SelectionWindow : Window
     {

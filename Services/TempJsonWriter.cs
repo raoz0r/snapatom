@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace Text_Grab
+namespace SnapAtom
 {
     public class OcrEntry
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Text_Grab
+namespace SnapAtom
 {
     public static class AiClient
     {

@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 
-namespace Text_Grab
+namespace SnapAtom
 {
     public class HotkeyManager : IDisposable
     {

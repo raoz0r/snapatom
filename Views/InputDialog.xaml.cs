@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace Text_Grab
+namespace SnapAtom
 {
     public partial class InputDialog : Window
     {

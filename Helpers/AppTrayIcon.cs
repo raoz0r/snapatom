@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Text_Grab
+namespace SnapAtom
 {
     public class AppTrayIcon : IDisposable
     {

@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <AssemblyName>SnapAtom</AssemblyName>
-    <RootNamespace>Text_Grab</RootNamespace>
+    <RootNamespace>SnapAtom</RootNamespace>
     <Product>SnapAtom</Product>
     <Title>SnapAtom</Title>
     <Nullable>enable</Nullable>

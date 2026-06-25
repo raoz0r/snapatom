@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Text_Grab
+namespace SnapAtom
 {
     public partial class SettingsWindow : Window
     {

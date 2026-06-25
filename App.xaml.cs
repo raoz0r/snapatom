@@ -2,7 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace Text_Grab
+namespace SnapAtom
 {
     public partial class App : Application
     {

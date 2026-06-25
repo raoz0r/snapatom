@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Media.Ocr;
 
-namespace Text_Grab
+namespace SnapAtom
 {
     public static class OcrEngineHelper
     {
