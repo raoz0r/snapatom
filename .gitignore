@@ -1,0 +1,29 @@
+# User-specific configuration & secrets
+settings.json
+.env
+
+# Temporary run/sync data
+temp.json
+index.md
+*.log
+bin/logs/
+scrapped_backup/
+
+# Build and Output Folders
+[Db]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bld/
+publish/
+
+# IDE files (Visual Studio, JetBrains, VS Code)
+.vs/
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates

@@ -1,0 +1,24 @@
+<Window x:Class="Text_Grab.SelectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Selection Overlay"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="#20000000"
+        Cursor="Cross"
+        Topmost="True"
+        ShowInTaskbar="False"
+        Loaded="Window_Loaded">
+    <Canvas x:Name="SelectionCanvas" Background="Transparent"
+            MouseDown="SelectionCanvas_MouseDown"
+            MouseMove="SelectionCanvas_MouseMove"
+            MouseUp="SelectionCanvas_MouseUp"
+            KeyDown="SelectionCanvas_KeyDown">
+        <Border x:Name="SelectionBorder"
+                BorderBrush="#FF4361EE"
+                BorderThickness="2"
+                CornerRadius="2"
+                Background="#1A4361EE"
+                Visibility="Collapsed"/>
+    </Canvas>
+</Window>
