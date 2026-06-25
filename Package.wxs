@@ -1,7 +1,7 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <Package Name="SnapAtom" 
            Manufacturer="SnapAtom" 
-           Version="1.0.0" 
+           Version="$(var.Version)" 
            UpgradeCode="4f3a768d-7c45-0305-ff1f-f0104b7e441f" 
            Scope="perMachine">
     

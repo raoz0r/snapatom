@@ -2,13 +2,15 @@ name: Compile, Package and Release
 
 on:
   push:
-    tags:
-      - 'v*' # Triggers on any tag starting with v (e.g., v1.0.0)
-  workflow_dispatch: # Allows you to trigger the build manually from GitHub Web UI
+    branches:
+      - main
+  workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
   build-and-release:
-    runs-on: windows-latest # Windows runner has dotnet and Windows SDK (signtool) pre-installed
+    runs-on: windows-latest
+    permissions:
+      contents: write # Required to create a release and upload assets
 
     steps:
     - name: Checkout Code
@@ -24,29 +26,7 @@ jobs:
       run: |
         dotnet publish SnapAtom.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishReadyToRun=true -o publish_output
 
-    # 2. Decode & Import Code Signing Certificate (if configured in GitHub secrets)
-    # Secrets to set: SIGNING_CERT_BASE64 (Base64 string of PFX) and SIGNING_CERT_PASSWORD
-    - name: Prepare Code Signing Certificate
-      if: env.HAS_CERT == 'true'
-      env:
-        HAS_CERT: ${{ secrets.SIGNING_CERT_BASE64 != '' }}
-      shell: pwsh
-      run: |
-        $certBytes = [System.Convert]::FromBase64String("${{ secrets.SIGNING_CERT_BASE64 }}")
-        [System.IO.File]::WriteAllBytes("${{ github.workspace }}\signing_cert.pfx", $certBytes)
-
-    # 3. Sign the Executable (signtool is preinstalled on windows-latest runner)
-    - name: Sign Executable
-      if: env.HAS_CERT == 'true'
-      env:
-        HAS_CERT: ${{ secrets.SIGNING_CERT_BASE64 != '' }}
-      shell: pwsh
-      run: |
-        # Locate signtool
-        $signtool = Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits" -Filter "signtool.exe" -Recurse | Select-Object -First 1
-        & $signtool.FullName sign /f "${{ github.workspace }}\signing_cert.pfx" /p "${{ secrets.SIGNING_CERT_PASSWORD }}" /tr http://timestamp.digicert.com /td sha256 /fd sha256 "${{ github.workspace }}\publish_output\SnapAtom.exe"
-
-    # 4. Install WiX Toolset CLI
+    # 2. Install WiX Toolset CLI
     - name: Install WiX CLI
       shell: pwsh
       run: |
@@ -57,35 +37,26 @@ jobs:
       run: |
         wix eula accept wix7
 
-    # 5. Build the MSI Installer Package
+    # 3. Build the MSI Installer Package (dynamically versioned with run number)
     - name: Build MSI Package
       shell: pwsh
       run: |
-        dotnet build SnapAtom.wixproj -c Release -p:PublishDir=publish_output
+        dotnet build SnapAtom.wixproj -c Release -p:PublishDir=publish_output -p:Version=1.0.${{ github.run_number }}
         Copy-Item -Path "bin\Release\SnapAtom.msi" -Destination "SnapAtom.msi"
 
-    # 6. Sign the MSI Package
-    - name: Sign MSI Package
-      if: env.HAS_CERT == 'true'
-      env:
-        HAS_CERT: ${{ secrets.SIGNING_CERT_BASE64 != '' }}
-      shell: pwsh
-      run: |
-        $signtool = Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits" -Filter "signtool.exe" -Recurse | Select-Object -First 1
-        & $signtool.FullName sign /f "${{ github.workspace }}\signing_cert.pfx" /p "${{ secrets.SIGNING_CERT_PASSWORD }}" /tr http://timestamp.digicert.com /td sha256 /fd sha256 "${{ github.workspace }}\SnapAtom.msi"
-
-    # 7. Upload Build Artifact (allows downloading SnapAtom.msi directly from any Action run)
+    # 4. Upload Build Artifact (allows downloading SnapAtom.msi directly from any Action run)
     - name: Upload Installer Artifact
       uses: actions/upload-artifact@v4
       with:
         name: SnapAtomInstaller
         path: ${{ github.workspace }}\SnapAtom.msi
 
-    # 8. Create GitHub Release & Upload Installer (only runs on tags)
+    # 5. Create GitHub Release & Upload Installer
     - name: Create Release
-      if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v2.2.0
       with:
+        tag_name: v1.0.${{ github.run_number }}
+        name: Release v1.0.${{ github.run_number }}
         files: |
           ${{ github.workspace }}\SnapAtom.msi
         draft: false

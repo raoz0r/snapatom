@@ -18,6 +18,7 @@ x64/
 x86/
 bld/
 publish/
+publish_output/
 
 # IDE files (Visual Studio, JetBrains, VS Code)
 .vs/

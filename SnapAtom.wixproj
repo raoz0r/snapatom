@@ -4,6 +4,7 @@
     <OutputType>Package</OutputType>
     <AcceptEula>wix7</AcceptEula>
     <InstallerPlatform>x64</InstallerPlatform>
-    <DefineConstants>PublishDir=$(PublishDir)</DefineConstants>
+    <Version Condition="'$(Version)' == ''">1.0.0</Version>
+    <DefineConstants>PublishDir=$(PublishDir);Version=$(Version)</DefineConstants>
   </PropertyGroup>
 </Project>
