@@ -22,7 +22,7 @@ jobs:
     # 1. Publish the Single-File Executable
     - name: Publish SnapAtom Single-File
       run: |
-        dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishReadyToRun=true -o publish_output
+        dotnet publish SnapAtom.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishReadyToRun=true -o publish_output
 
     # 2. Decode & Import Code Signing Certificate (if configured in GitHub secrets)
     # Secrets to set: SIGNING_CERT_BASE64 (Base64 string of PFX) and SIGNING_CERT_PASSWORD
