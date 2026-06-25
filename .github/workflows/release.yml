@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: '8.0.x'
 
@@ -84,7 +84,7 @@ jobs:
     # 8. Create GitHub Release & Upload Installer (only runs on tags)
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/')
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v2.2.0
       with:
         files: |
           ${{ github.workspace }}\SnapAtom.msi
