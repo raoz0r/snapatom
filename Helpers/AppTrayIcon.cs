@@ -10,6 +10,7 @@ namespace SnapAtom
         private static extern bool DestroyIcon(IntPtr handle);
 
         private readonly NotifyIcon notifyIcon;
+        private Icon? customIcon;
         private IntPtr hIcon = IntPtr.Zero;
 
         public event Action? OnCaptureRegion;
@@ -23,25 +24,43 @@ namespace SnapAtom
         {
             notifyIcon = new NotifyIcon();
 
-            // Try to load tray icon from custom PNG
+            // Try to load tray icon from custom ICO
             try
             {
-                string pngPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "app_icon.png");
-                if (System.IO.File.Exists(pngPath))
+                string icoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "app_icon.ico");
+                if (System.IO.File.Exists(icoPath))
                 {
-                    using (Bitmap bmp = new Bitmap(pngPath))
-                    {
-                        hIcon = bmp.GetHicon();
-                        notifyIcon.Icon = Icon.FromHandle(hIcon);
-                    }
+                    customIcon = new Icon(icoPath);
+                    notifyIcon.Icon = customIcon;
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Failed to load tray icon from PNG: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Failed to load tray icon from ICO: {ex.Message}");
             }
 
-            // Fallback if loading custom icon failed
+            // Fallback to custom PNG if ICO failed or doesn't exist
+            if (notifyIcon.Icon == null)
+            {
+                try
+                {
+                    string pngPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "app_icon.png");
+                    if (System.IO.File.Exists(pngPath))
+                    {
+                        using (Bitmap bmp = new Bitmap(pngPath))
+                        {
+                            hIcon = bmp.GetHicon();
+                            notifyIcon.Icon = Icon.FromHandle(hIcon);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to load tray icon from PNG: {ex.Message}");
+                }
+            }
+
+            // Fallback if loading custom icon files failed
             if (notifyIcon.Icon == null)
             {
                 try
@@ -126,6 +145,12 @@ namespace SnapAtom
         {
             notifyIcon.Visible = false;
             notifyIcon.Dispose();
+
+            if (customIcon != null)
+            {
+                customIcon.Dispose();
+                customIcon = null;
+            }
 
             if (hIcon != IntPtr.Zero)
             {

@@ -20,7 +20,7 @@
     <StandardDirectory Id="DesktopFolder" />
 
     <!-- Icon configuration for Shortcuts -->
-    <Icon Id="AppIcon" SourceFile="Resources\app_icon.png" />
+    <Icon Id="AppIcon" SourceFile="Resources\app_icon.ico" />
 
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       
@@ -59,6 +59,12 @@
       <Component Id="AppIconPngComponent" Guid="5b1a2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d" Bitness="always64">
         <File Id="AppIconPng" 
               Source="$(var.PublishDir)\app_icon.png" 
+              KeyPath="yes" />
+      </Component>
+
+      <Component Id="AppIconIcoComponent" Guid="5b1a2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5e" Bitness="always64">
+        <File Id="AppIconIco" 
+              Source="$(var.PublishDir)\app_icon.ico" 
               KeyPath="yes" />
       </Component>
 

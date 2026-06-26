@@ -48,6 +48,8 @@ namespace SnapAtom
             
             hotkeyManager.RegisterHotkeys(settings);
             
+            trayIcon.ShowNotification("SnapAtom Active", "OCR Pipeline is running in the system tray. Use Win+S to capture.", System.Windows.Forms.ToolTipIcon.Info);
+            
             System.Diagnostics.Debug.WriteLine("OCR Pipeline background service started.");
         }
 
